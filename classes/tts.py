@@ -108,7 +108,7 @@ class TextToSpeechService(AIModelService):
                 bt.logging.info(f"--------------------------------- Prompt are being used locally for TTS at Step: {step}---------------------------------")
                 responses = self.query_network(filtered_axons,lprompt)
                 bt.logging.info(f"--------------------------------- responses are going LOCALLY ---------------------------------")
-                self.process_responses(filtered_axons,responses, lprompt)
+                await self.process_responses(filtered_axons,responses, lprompt)
                 bt.logging.info(f"--------------------------------- process_response function if done LOCALLY ---------------------------------")
             self.islocaltts = False
 
@@ -124,7 +124,7 @@ class TextToSpeechService(AIModelService):
             bt.logging.info(f"--------------------------------- Prompt are being used from HuggingFace Dataset for TTS at Step: {step} ---------------------------------")
             responses = self.query_network(filtered_axons,g_prompt)
             bt.logging.info(f"---------------------------------HUGGINGFACE responses are going ---------------------------------")
-            self.process_responses(filtered_axons,responses, g_prompt)
+            await self.process_responses(filtered_axons,responses, g_prompt)
             bt.logging.info(f"---------------------------------HUGGINGFACE process_response function if done ---------------------------------")
 
     async def main_loop_logic(self, step):
