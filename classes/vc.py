@@ -90,7 +90,7 @@ class VoiceCloningService(AIModelService):
                 traceback.print_exc()
 
     async def process_huggingface_prompts(self, step):
-        if step % 2000 == 0:
+        if step % 500 == 0:
             bt.logging.info(f"--------------------------------- Prompt and voices are being used from HuggingFace Dataset for Voice Clone ---------------------------------")
             self.filename = ""
             self.text_input = random.choice(self.prompts)
@@ -168,7 +168,7 @@ class VoiceCloningService(AIModelService):
             bt.logging.error(f"An error occurred in VoiceCloningService: {e}")
             traceback.print_exc()
 
-        await asyncio.sleep(1)  # Delay at the end of each loop iteration
+        await asyncio.sleep(0.5)  # Delay at the end of each loop iteration
         return tasks
 
     def convert_array_to_wav(audio_data, output_filename):
