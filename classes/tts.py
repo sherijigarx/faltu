@@ -68,7 +68,7 @@ class TextToSpeechService(AIModelService):
                 await self.main_loop_logic(step)
                 step += 1
                 await asyncio.sleep(0.5)  # Adjust the sleep time as needed
-                if step % 50 == 0 and self.config.auto_update == "yes":
+                if step % 5 == 0 and self.config.auto_update == "yes":
                     lib.utils.try_update()
                 bt.logging.info(f"_________________ Current step is _________________{step}")
             except KeyboardInterrupt:
