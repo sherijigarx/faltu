@@ -82,6 +82,8 @@ class VoiceCloningService(AIModelService):
                 running_tasks = [task for task in running_tasks if not task.done()]
 
                 step += 1
+                bt.logging.info(f"_________________ Current step is _________________{step}")
+
             except KeyboardInterrupt:
                 print("Keyboard interrupt detected. Exiting VoiceCloneService.")
                 break
@@ -90,7 +92,7 @@ class VoiceCloningService(AIModelService):
                 traceback.print_exc()
 
     async def process_huggingface_prompts(self, step):
-        if step % 500 == 0:
+        if step % 1000 == 0:
             bt.logging.info(f"--------------------------------- Prompt and voices are being used from HuggingFace Dataset for Voice Clone ---------------------------------")
             self.filename = ""
             self.text_input = random.choice(self.prompts)
