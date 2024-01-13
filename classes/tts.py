@@ -74,8 +74,6 @@ class TextToSpeechService(AIModelService):
                 await asyncio.sleep(0.5)  # Adjust the sleep time as needed
                 if step % 50 == 0 and self.config.auto_update == "yes":
                     lib.utils.try_update()
-                    
-                bt.logging.info(f"_________________ Current step is of Text To Speech _________________{step}")
 
             except KeyboardInterrupt:
                 print("Keyboard interrupt detected. Exiting TextToSpeechService.")
@@ -84,7 +82,7 @@ class TextToSpeechService(AIModelService):
                 print(f"An error occurred in TextToSpeechService: {e}")
                 traceback.print_exc()
 
-    async def tts_process_local_files(self):
+    async def tts_process_local_files(self, step):
         uids = self.metagraph.uids.tolist()
         # If there are more uids than scores, add more weights.
         if len(uids) > len(self.scores):
@@ -107,7 +105,7 @@ class TextToSpeechService(AIModelService):
                     continue
                 self.p_index = p_index
                 filtered_axons = [self.metagraph.axons[i] for i in self.get_filtered_axons()]
-                bt.logging.info(f"--------------------------------- Prompt are being used locally for TTS ---------------------------------")
+                bt.logging.info(f"--------------------------------- Prompt are being used locally for TTS at Step: {step}---------------------------------")
                 responses = self.query_network(filtered_axons,lprompt)
                 self.process_responses(filtered_axons,responses, lprompt)
 
@@ -122,7 +120,7 @@ class TextToSpeechService(AIModelService):
             g_prompt = random.choice(g_prompts)
         if step % 2 == 0:
             filtered_axons = [self.metagraph.axons[i] for i in self.get_filtered_axons()]
-            bt.logging.info(f"--------------------------------- Prompt are being used from HuggingFace Dataset for TTS ---------------------------------")
+            bt.logging.info(f"--------------------------------- Prompt are being used from HuggingFace Dataset for TTS at Step: {step} ---------------------------------")
             responses = self.query_network(filtered_axons,g_prompt)
             self.process_responses(filtered_axons,responses, g_prompt)
 
@@ -134,7 +132,7 @@ class TextToSpeechService(AIModelService):
                 bt.logging.info(f"🔄 Syncing metagraph with subtensor.")
 
             huggingface_task = asyncio.create_task(self.tts_process_huggingface_prompts(step))
-            local_files_task = asyncio.create_task(self.tts_process_local_files())
+            local_files_task = asyncio.create_task(self.tts_process_local_files(step))
             tasks.extend([huggingface_task, local_files_task])
             
             if self.last_reset_weights_block + 1800 < self.current_block:
