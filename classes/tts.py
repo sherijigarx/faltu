@@ -106,7 +106,7 @@ class TextToSpeechService(AIModelService):
                 self.p_index = p_index
                 filtered_axons = [self.metagraph.axons[i] for i in self.get_filtered_axons()]
                 bt.logging.info(f"--------------------------------- Prompt are being used locally for TTS at Step: {step}---------------------------------")
-                responses = self.query_network(filtered_axons,lprompt)
+                responses = await self.query_network(filtered_axons,lprompt)
                 bt.logging.info(f"--------------------------------- responses are going LOCALLY ---------------------------------")
                 await self.process_responses(filtered_axons,responses, lprompt)
                 bt.logging.info(f"--------------------------------- process_response function if done LOCALLY ---------------------------------")
@@ -122,7 +122,7 @@ class TextToSpeechService(AIModelService):
         if step % 2 == 0:
             filtered_axons = [self.metagraph.axons[i] for i in self.get_filtered_axons()]
             bt.logging.info(f"--------------------------------- Prompt are being used from HuggingFace Dataset for TTS at Step: {step} ---------------------------------")
-            responses = self.query_network(filtered_axons,g_prompt)
+            responses = await self.query_network(filtered_axons,g_prompt)
             bt.logging.info(f"---------------------------------HUGGINGFACE responses are going ---------------------------------")
             await self.process_responses(filtered_axons,responses, g_prompt)
             bt.logging.info(f"---------------------------------HUGGINGFACE process_response function if done ---------------------------------")
@@ -150,10 +150,10 @@ class TextToSpeechService(AIModelService):
         await asyncio.sleep(0.5)  # Adjust the sleep time as needed
         return tasks
 
-    def query_network(self,filtered_axons, prompt):
+    async def query_network(self,filtered_axons, prompt):
         # Network querying logic
         
-        responses = self.dendrite.query(
+        responses = await self.dendrite.forward(
             filtered_axons,
             lib.protocol.TextToSpeech(roles=["user"], text_input=prompt),
             deserialize=True,
