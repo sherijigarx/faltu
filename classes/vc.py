@@ -82,7 +82,7 @@ class VoiceCloningService(AIModelService):
                 running_tasks = [task for task in running_tasks if not task.done()]
 
                 step += 1
-                bt.logging.info(f"_________________ Current step is _________________{step}")
+                bt.logging.info(f"_________________ Current step is of Voice Cloning _________________{step}")
 
             except KeyboardInterrupt:
                 print("Keyboard interrupt detected. Exiting VoiceCloneService.")

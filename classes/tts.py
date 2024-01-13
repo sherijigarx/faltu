@@ -62,15 +62,21 @@ class TextToSpeechService(AIModelService):
         
     async def run_async(self):
         step = 0
-
+        running_tasks = []
         while True:
             try:
-                await self.main_loop_logic(step)
+                new_tasks = await self.main_loop_logic(step)
+                running_tasks.extend(new_tasks)
+
+                running_tasks = [tasks for tasks in running_tasks if not tasks.done()]
+
                 step += 1
                 await asyncio.sleep(0.5)  # Adjust the sleep time as needed
-                if step % 5 == 0 and self.config.auto_update == "yes":
+                if step % 50 == 0 and self.config.auto_update == "yes":
                     lib.utils.try_update()
-                bt.logging.info(f"_________________ Current step is _________________{step}")
+                    
+                bt.logging.info(f"_________________ Current step is of Text To Speech _________________{step}")
+
             except KeyboardInterrupt:
                 print("Keyboard interrupt detected. Exiting TextToSpeechService.")
                 break
@@ -78,12 +84,7 @@ class TextToSpeechService(AIModelService):
                 print(f"An error occurred in TextToSpeechService: {e}")
                 traceback.print_exc()
 
-    async def main_loop_logic(self, step):
-        # Sync and update weights logic
-        if step % 5 == 0:
-            self.metagraph.sync(subtensor=self.subtensor)
-            bt.logging.info(f"🔄 Syncing metagraph with subtensor.")
-        
+    async def tts_process_local_files(self):
         uids = self.metagraph.uids.tolist()
         # If there are more uids than scores, add more weights.
         if len(uids) > len(self.scores):
@@ -110,30 +111,43 @@ class TextToSpeechService(AIModelService):
                 responses = self.query_network(filtered_axons,lprompt)
                 self.process_responses(filtered_axons,responses, lprompt)
 
-                if self.last_reset_weights_block + 1800 < self.current_block:
-                    bt.logging.trace(f"Clearing weights for validators and nodes without IPs")
-                    self.last_reset_weights_block = self.current_block        
-                    # set all nodes without ips set to 0
-                    scores = scores * torch.Tensor([self.metagraph.neurons[uid].axon_info.ip != '0.0.0.0' for uid in self.metagraph.uids])
             self.islocaltts = False
-        else:
-            bt.logging.trace("No prompts found or wrong file name was given. Using Huggingface Dataset for prompts.")
-            g_prompts = self.load_prompts()
-            g_prompt = random.choice(g_prompts)
-            while len(g_prompt) > 256:
-                bt.logging.error(f'The length of current Prompt is greater than 256. Skipping current prompt.')
-                g_prompt = random.choice(g_prompts)
-            if step % 2 == 0:
-                filtered_axons = [self.metagraph.axons[i] for i in self.get_filtered_axons()]
-                bt.logging.info(f"--------------------------------- Prompt are being used from HuggingFace Dataset for TTS ---------------------------------")
-                responses = self.query_network(filtered_axons,g_prompt)
-                self.process_responses(filtered_axons,responses, g_prompt)
 
-                if self.last_reset_weights_block + 1800 < self.current_block:
-                    bt.logging.trace(f"Clearing weights for validators and nodes without IPs")
-                    self.last_reset_weights_block = self.current_block        
-                    # set all nodes without ips set to 0
-                    scores = scores * torch.Tensor([self.metagraph.neurons[uid].axon_info.ip != '0.0.0.0' for uid in self.metagraph.uids])
+    async def tts_process_huggingface_prompts(self, step):
+        bt.logging.trace("No prompts found or wrong file name was given. Using Huggingface Dataset for prompts.")
+        g_prompts = self.load_prompts()
+        g_prompt = random.choice(g_prompts)
+        while len(g_prompt) > 256:
+            bt.logging.error(f'The length of current Prompt is greater than 256. Skipping current prompt.')
+            g_prompt = random.choice(g_prompts)
+        if step % 2 == 0:
+            filtered_axons = [self.metagraph.axons[i] for i in self.get_filtered_axons()]
+            bt.logging.info(f"--------------------------------- Prompt are being used from HuggingFace Dataset for TTS ---------------------------------")
+            responses = self.query_network(filtered_axons,g_prompt)
+            self.process_responses(filtered_axons,responses, g_prompt)
+
+    async def main_loop_logic(self, step):
+        tasks = []
+        try:
+            if step % 5 == 0:
+                self.metagraph.sync(subtensor=self.subtensor)
+                bt.logging.info(f"🔄 Syncing metagraph with subtensor.")
+
+            huggingface_task = asyncio.create_task(self.tts_process_huggingface_prompts(step))
+            local_files_task = asyncio.create_task(self.tts_process_local_files())
+            tasks.extend([huggingface_task, local_files_task])
+            
+            if self.last_reset_weights_block + 1800 < self.current_block:
+                bt.logging.trace(f"Clearing weights for validators and nodes without IPs")
+                self.last_reset_weights_block = self.current_block        
+                # set all nodes without ips set to 0
+                scores = scores * torch.Tensor([self.metagraph.neurons[uid].axon_info.ip != '0.0.0.0' for uid in self.metagraph.uids])
+        except Exception as e:
+            bt.logging.error(f"An error occured in TextToSpeechService: {e}")
+            traceback.print_exc()
+
+        await asyncio.sleep(0.5)  # Adjust the sleep time as needed
+        return tasks
 
     def query_network(self,filtered_axons, prompt):
         # Network querying logic
