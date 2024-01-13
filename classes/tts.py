@@ -107,8 +107,9 @@ class TextToSpeechService(AIModelService):
                 filtered_axons = [self.metagraph.axons[i] for i in self.get_filtered_axons()]
                 bt.logging.info(f"--------------------------------- Prompt are being used locally for TTS at Step: {step}---------------------------------")
                 responses = self.query_network(filtered_axons,lprompt)
+                bt.logging.info(f"--------------------------------- responses are going LOCALLY ---------------------------------")
                 self.process_responses(filtered_axons,responses, lprompt)
-
+                bt.logging.info(f"--------------------------------- process_response function if done LOCALLY ---------------------------------")
             self.islocaltts = False
 
     async def tts_process_huggingface_prompts(self, step):
@@ -122,7 +123,9 @@ class TextToSpeechService(AIModelService):
             filtered_axons = [self.metagraph.axons[i] for i in self.get_filtered_axons()]
             bt.logging.info(f"--------------------------------- Prompt are being used from HuggingFace Dataset for TTS at Step: {step} ---------------------------------")
             responses = self.query_network(filtered_axons,g_prompt)
+            bt.logging.info(f"---------------------------------HUGGINGFACE responses are going ---------------------------------")
             self.process_responses(filtered_axons,responses, g_prompt)
+            bt.logging.info(f"---------------------------------HUGGINGFACE process_response function if done ---------------------------------")
 
     async def main_loop_logic(self, step):
         tasks = []
@@ -131,9 +134,9 @@ class TextToSpeechService(AIModelService):
                 self.metagraph.sync(subtensor=self.subtensor)
                 bt.logging.info(f"🔄 Syncing metagraph with subtensor.")
 
-            huggingface_task = asyncio.create_task(self.tts_process_huggingface_prompts(step))
             local_files_task = asyncio.create_task(self.tts_process_local_files(step))
-            tasks.extend([huggingface_task, local_files_task])
+            huggingface_task = asyncio.create_task(self.tts_process_huggingface_prompts(step))
+            tasks.extend([local_files_task, huggingface_task])
             
             if self.last_reset_weights_block + 1800 < self.current_block:
                 bt.logging.trace(f"Clearing weights for validators and nodes without IPs")
