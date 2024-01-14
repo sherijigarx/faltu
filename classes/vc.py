@@ -80,7 +80,6 @@ class VoiceCloningService(AIModelService):
 
                 # Periodically check and clean up completed tasks
                 running_tasks = [task for task in running_tasks if not task.done()]
-                bt.logging.info(f" ++++++++++++++++++++++++++++++ Running steps in VC: {step} ++++++++++++++++++++++++++++++ ")
                 step += 1
 
             except KeyboardInterrupt:
