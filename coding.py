@@ -429,7 +429,7 @@ class HuBERTManager:
 
 
     @staticmethod
-    def make_sure_tokenizer_installed(model: str = 'quantifier_hubert_base_ls960_14.pth', repo: str = ' ', local_file: str = 'tokenizer.pth'):
+    def make_sure_tokenizer_installed(model: str = 'quantifier_hubert_base_ls960_14.pth', repo: str = 'GitMylo/bark-voice-cloning', local_file: str = 'tokenizer.pth'):
         install_dir = os.path.join('data', 'models', 'hubert')
         if not os.path.isdir(install_dir):
             os.makedirs(install_dir, exist_ok=True)
