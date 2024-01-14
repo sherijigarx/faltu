@@ -15,8 +15,7 @@ sys.path.insert(0, project_root)
 sys.path.insert(0, audio_subnet_path)
 
 
-from bark_extras import (HuBERTManager, CustomHubert, CustomTokenizer, load_codec_model,
-                         generate_text_semantic, preload_models, codec_decode, generate_coarse, generate_fine)
+from bark_extras import HuBERTManager, CustomHubert, CustomTokenizer, load_codec_model, generate_text_semantic, preload_models, codec_decode, generate_coarse, generate_fine 
 from encodec.utils import convert_audio
 
 class BarkVoiceClone:
