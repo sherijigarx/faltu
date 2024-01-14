@@ -56,6 +56,7 @@ sys.path.insert(0, audio_subnet_path)
 # import this repo
 from models.text_to_speech_models import SunoBark, TextToSpeechModels, ElevenLabsTTS, EnglishTextToSpeech
 from models.voice_clone import ElevenLabsClone  
+from models.bark_voice_clone import BarkVoiceClone
 import lib.protocol
 import lib.utils
 import lib
@@ -137,7 +138,10 @@ def main(config):
     # =========================================== Text To Speech model selection ============================================
             
     # =========================================== Voice Clone model selection ===============================================    
-        if config.clone_model is not None and config.clone_model == "elevenlabs/eleven" and config.eleven_api is not None:
+        if config.clone_model == "bark/voiceclone":
+            bt.logging.info("Using the Voice Clone with the supplied model: bark/voiceclone")
+            voice_clone_model = BarkVoiceClone()
+        elif config.clone_model is not None and config.clone_model == "elevenlabs/eleven" and config.eleven_api is not None:
             bt.logging.info(f"Using the Voice Clone with the supplied model: {config.clone_model}")
             voice_clone_model = ElevenLabsClone(config.eleven_api)
         else:
@@ -230,6 +234,17 @@ def main(config):
         except Exception as e:
             bt.logging.error(f"An error occurred while calling the model: {e}")
 
+    def BarkVoiceClone_call(text, source_file, hf_voice_id):
+        '''Call the Bark Voice Clone API to clone the voice'''
+        speech = None
+        try:
+            bark_voice_clone = BarkVoiceClone(source_file)
+            speech = bark_voice_clone.clone_voice(text, hf_voice_id)
+            bark_file = save_audio(speech)
+            return bark_file
+        except Exception as e:
+            bt.logging.error(f"An error occurred while calling the model: {e}")
+
     def convert_audio_to_tensor(audio_file):
         '''Convert the audio file to a tensor'''
         try:
@@ -280,6 +295,9 @@ def main(config):
         try:
             if config.clone_model == "elevenlabs/eleven":
                 speech_file_path = ElevenlabsClone_call(input_text, 'input.wav',hf_voice_id)
+                speech = convert_audio_to_tensor(speech_file_path)
+            elif config.clone_model == "bark_voice_clone":
+                speech_file_path = BarkVoiceClone_call(input_text, 'input.wav',hf_voice_id)
                 speech = convert_audio_to_tensor(speech_file_path)
             if speech is not None:
                 bt.logging.success("Voice Clone has been generated!")
