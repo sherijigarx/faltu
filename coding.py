@@ -275,14 +275,7 @@ class GPT(nn.Module):
 Much of this code is adapted from Andrej Karpathy's NanoGPT
 (https://github.com/karpathy/nanoGPT)
 """
-from dataclasses import dataclass
-import math
 
-import torch
-import torch.nn as nn
-from torch.nn import functional as F
-
-from .model import GPT, GPTConfig, MLP
 
 
 class NonCausalSelfAttention(nn.Module):
