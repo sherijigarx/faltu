@@ -1711,12 +1711,15 @@ class BarkVoiceCloning:
         pass
 
     def clone_voice(self, prompt, voice_name, input_audio_file, model_loader):
+
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         # model_loader = ModelLoader(device)
         # Process audio
-        audio_processor = AudioProcessor(input_audio_file, model_loader.model, device)
-        processed_audio = audio_processor.process_audio()
-
+        try:
+            audio_processor = AudioProcessor(input_audio_file, model_loader.model, device)
+            processed_audio = audio_processor.process_audio()
+        except:
+            raise Exception(f"Audio file not found or model issue: {model_loader.model}")
         # Generate semantic tokens
         semantic_generator = SemanticGenerator(model_loader.hubert_model, model_loader.tokenizer, processed_audio, model_loader.model)
         semantic_tokens = semantic_generator.generate_semantic_tokens()
