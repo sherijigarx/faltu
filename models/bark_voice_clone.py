@@ -1600,8 +1600,8 @@ def codec_decode(fine_tokens):
 
 
 class ModelLoader:
-   def __init__(self, device):
-       self.device = device
+   def __init__(self):
+       self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
        self.model = self.load_codec_model()
        self.hubert_manager = self.load_hubert_manager()
        self.hubert_model = self.load_hubert_model()
