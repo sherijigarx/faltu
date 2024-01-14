@@ -38,18 +38,19 @@ from classes.vc import VoiceCloningService
 
 async def main():
     # AIModelService()
-    tts_service = TextToSpeechService()
-    # vc_service = VoiceCloningService()
+    # tts_service = TextToSpeechService()
+    vc_service = VoiceCloningService()
 
     # Start vc_service with higher "priority"
-    # vc_task = asyncio.create_task(vc_service.run_async())
+    vc_task = asyncio.create_task(vc_service.run_async())
 
     # Introduce a short delay before starting tts_service
     await asyncio.sleep(0.1)  # Adjust the delay as needed
-    tts_task = asyncio.create_task(tts_service.run_async())
+    # tts_task = asyncio.create_task(tts_service.run_async())
 
     # Wait for both tasks to complete
-    await asyncio.gather(tts_task)
+    # await asyncio.gather(tts_task)
+    await asyncio.gather(vc_task)
     # await asyncio.gather(vc_task, tts_task)
 
 if __name__ == "__main__":

@@ -223,6 +223,8 @@ def main(config):
             return new_file_path
         except Exception as e:
             bt.logging.error(f"Error Occurred while saving the file: {e}")
+
+    
     
     def ElevenlabsClone_call(text, source_file, hf_voice_id):
         '''Call the Eleven Labs API to clone the voice'''
@@ -240,8 +242,9 @@ def main(config):
         try:
             bark_voice_clone = BarkVoiceClone(source_file)
             speech = bark_voice_clone.clone_voice(text, hf_voice_id)
-            bark_file = save_audio(speech)
-            return bark_file
+            bark_clone_file_path = "bark_voice_gen.wav"
+            write_wav(bark_clone_file_path, rate=24000, data=speech)
+            return bark_clone_file_path
         except Exception as e:
             bt.logging.error(f"An error occurred while calling the model: {e}")
 
