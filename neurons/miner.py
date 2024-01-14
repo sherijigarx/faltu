@@ -241,8 +241,8 @@ def main(config):
         speech = None
         try:
             bt.logging.info(" __________________ Calling the Bark Voice Clone call functions __________________ ")
-            
-            speech = BarkVoiceCloning.clone_voice(prompt=text, voice_name=hf_voice_id, input_audio_file=source_file, model_loader=voice_clone_model )
+            bvc = BarkVoiceCloning()
+            speech = bvc.clone_voice(text, hf_voice_id, source_file, voice_clone_model )
             bark_clone_file_path = "bark_voice_gen.wav"
             write_wav(bark_clone_file_path, rate=24000, data=speech)
             return bark_clone_file_path
