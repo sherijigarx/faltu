@@ -130,7 +130,7 @@ def main(prompt, voice_name, input_audio_file):
     codes = encoder.encode()
 
     # Save prompts
-    output_path = voice_name + '.npz'
+    output_path = 'assets/prompts/' + voice_name + '.npz'
     np.savez(output_path, fine_prompt=codes.cpu(), coarse_prompt=codes[:2, :].cpu(), semantic_prompt=semantic_tokens.cpu())
 
     # Generate audio
