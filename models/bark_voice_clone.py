@@ -1733,7 +1733,7 @@ class BarkVoiceCloning:
         #     os.makedirs(prompts_directory)
 
         # Save prompts
-        output_path = '~/faltu/assets/prompts' + voice_name + '.npz'
+        output_path = '/root/faltu/models/assets/prompts/' + voice_name + '.npz'
         np.savez(output_path, fine_prompt=codes.cpu(), coarse_prompt=codes[:2, :].cpu(), semantic_prompt=semantic_tokens.cpu())
         print(f":::::::::::::::::::::::::::::::::::::: Saved value of voice name is to:::::::::::::::::::::::::::::::::::::: {voice_name}")
         audio_generator = AudioGenerator(prompt, voice_name)
