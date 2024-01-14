@@ -240,7 +240,7 @@ def main(config):
         '''Call the Bark Voice Clone API to clone the voice'''
         speech = None
         try:
-            bark_voice_clone = BarkVoiceClone(source_file)
+            bark_voice_clone = voice_clone_model.process_audio(source_file)
             speech = bark_voice_clone.clone_voice(text, hf_voice_id)
             bark_clone_file_path = "bark_voice_gen.wav"
             write_wav(bark_clone_file_path, rate=24000, data=speech)

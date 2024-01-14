@@ -1611,9 +1611,9 @@ def codec_decode(fine_tokens):
 
 
 class BarkVoiceClone:
-    def __init__(self, input_audio_file):
+    def __init__(self):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        self.input_audio_file = input_audio_file
+        # self.input_audio_file = input_audio_file
         self.model = self.load_codec_model()
         self.hubert_manager = self.load_hubert_manager()
         self.hubert_model = self.load_hubert_model()
@@ -1634,8 +1634,8 @@ class BarkVoiceClone:
     def load_tokenizer(self):
         return CustomTokenizer.load_from_checkpoint('data/models/hubert/tokenizer.pth').to(self.device)
 
-    def process_audio(self):
-        wav, sr = torchaudio.load(self.input_audio_file)
+    def process_audio(self, input_audio_file):
+        wav, sr = torchaudio.load(input_audio_file)
         wav = convert_audio(wav, sr, self.model.sample_rate, self.model.channels)
         wav = wav.to(self.device)
         return wav
