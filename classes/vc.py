@@ -90,7 +90,7 @@ class VoiceCloningService(AIModelService):
                 traceback.print_exc()
 
     async def process_huggingface_prompts(self, step):
-        if step % 10 == 0:
+        if step % 60 == 0:
             bt.logging.info(f"--------------------------------- Prompt and voices are being used from HuggingFace Dataset for Voice Clone at Step: {step} ---------------------------------")
             self.filename = ""
             self.text_input = random.choice(self.prompts)
@@ -306,7 +306,7 @@ class VoiceCloningService(AIModelService):
             bt.logging.info(f"filtered_uids for Voice Cloning Service:{filtered_uids}")
             # dendrites_to_query = random.sample( filtered_uids, min( dendrites_per_query, len(filtered_uids) ) )
             # (0, 2, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 21, 29, 30, 31, 32, 33, 34)
-            dendrites_to_query = filtered_uids[-3:]
+            dendrites_to_query = filtered_uids[-2:]
             bt.logging.info(f"Dendrites to be queried for Voice Cloning Service :{dendrites_to_query}")
             return dendrites_to_query
         except Exception as e:
