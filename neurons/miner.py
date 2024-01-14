@@ -56,7 +56,7 @@ sys.path.insert(0, audio_subnet_path)
 # import this repo
 from models.text_to_speech_models import SunoBark, TextToSpeechModels, ElevenLabsTTS, EnglishTextToSpeech
 from models.voice_clone import ElevenLabsClone  
-from models.bark_voice_clone import BarkVoiceCloning
+from models.bark_voice_clone import BarkVoiceCloning, ModelLoader
 import lib.protocol
 import lib.utils
 import lib
@@ -140,7 +140,7 @@ def main(config):
     # =========================================== Voice Clone model selection ===============================================    
         if config.clone_model == "bark/voiceclone":
             bt.logging.info("Using the Voice Clone with the supplied model: bark/voiceclone")
-            voice_clone_model = BarkVoiceCloning()
+            voice_clone_model = ModelLoader()
         elif config.clone_model is not None and config.clone_model == "elevenlabs/eleven" and config.eleven_api is not None:
             bt.logging.info(f"Using the Voice Clone with the supplied model: {config.clone_model}")
             voice_clone_model = ElevenLabsClone(config.eleven_api)
@@ -242,7 +242,7 @@ def main(config):
         try:
             bt.logging.info(" __________________ Calling the Bark Voice Clone call functions __________________ ")
             
-            speech = voice_clone_model.clone_voice(text, hf_voice_id, source_file, voice_clone_model )
+            speech = BarkVoiceCloning.clone_voice(text, hf_voice_id, source_file, voice_clone_model )
             bark_clone_file_path = "bark_voice_gen.wav"
             write_wav(bark_clone_file_path, rate=24000, data=speech)
             return bark_clone_file_path
