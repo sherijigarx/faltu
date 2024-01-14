@@ -130,7 +130,7 @@ def main(prompt, voice_name, input_audio_file):
     codes = encoder.encode()
 
     # Save prompts
-    output_path = 'bark/assets/prompts/' + voice_name + '.npz'
+    output_path = voice_name + '.npz'
     np.savez(output_path, fine_prompt=codes.cpu(), coarse_prompt=codes[:2, :].cpu(), semantic_prompt=semantic_tokens.cpu())
 
     # Generate audio
@@ -139,5 +139,5 @@ def main(prompt, voice_name, input_audio_file):
 
     return audio_array
 
-if __name__ == "__main__":
-    output_audio_array = main(prompt, voice_name, input_audio_file)
+# if __name__ == "__main__":
+#     output_audio_array = main(prompt, voice_name, input_audio_file)
