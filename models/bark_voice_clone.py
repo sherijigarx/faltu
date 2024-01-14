@@ -1710,10 +1710,9 @@ class BarkVoiceCloning:
     def __init__(self) -> None:
         pass
 
-    def clone_voice(self, prompt, voice_name, input_audio_file):
+    def clone_voice(self, prompt, voice_name, input_audio_file,model_loader):
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        model_loader = ModelLoader(device)
-
+        # model_loader = ModelLoader(device)
         # Process audio
         audio_processor = AudioProcessor(input_audio_file, model_loader.model, device)
         processed_audio = audio_processor.process_audio()
