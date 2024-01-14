@@ -6,7 +6,7 @@ import numpy as np
 
 
 class ModelLoader:
-   def _init_(self, device):
+   def __init__(self, device):
        self.device = device
        self.model = self.load_codec_model()
        self.hubert_manager = self.load_hubert_manager()
@@ -30,7 +30,7 @@ class ModelLoader:
    
 
 class AudioProcessor:
-  def _init_(self, filepath, model, device):
+  def __init__(self, filepath, model, device):
       self.filepath = filepath
       self.model = model
       self.device = device
@@ -43,7 +43,7 @@ class AudioProcessor:
 
 
 class SemanticGenerator:
-   def _init_(self, hubert_model, tokenizer, wav, model):
+   def __init__(self, hubert_model, tokenizer, wav, model):
        self.hubert_model = hubert_model
        self.tokenizer = tokenizer
        self.wav = wav
@@ -55,7 +55,7 @@ class SemanticGenerator:
        return semantic_tokens
 
 class Encoder:
-   def _init_(self, model, wav):
+   def __init__(self, model, wav):
        self.model = model
        self.wav = wav
 
@@ -67,7 +67,7 @@ class Encoder:
 
 
 class AudioGenerator:
-  def _init_(self, text_prompt, voice_name):
+  def __init__(self, text_prompt, voice_name):
       self.text_prompt = text_prompt
       self.voice_name = voice_name
 
