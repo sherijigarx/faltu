@@ -1711,7 +1711,6 @@ class BarkVoiceCloning:
         pass
 
     def clone_voice(self, prompt, voice_name, input_audio_file, model_loader=None):
-        print(dir(model_loader))
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         # model_loader = ModelLoader(device)
         # Process audio
@@ -1729,7 +1728,7 @@ class BarkVoiceCloning:
         codes = encoder.encode()
 
         # Directory for saving prompts
-        prompts_directory = 'assets/prompts/'
+        prompts_directory = '~/faltu/assets/prompts/'
         if not os.path.exists(prompts_directory):
             os.makedirs(prompts_directory)
 
