@@ -224,7 +224,7 @@ class VoiceCloningService(AIModelService):
     def process_voice_clone_responses(self, ax):
         try:
             if self.response is not None and isinstance(self.response, lib.protocol.VoiceClone) and self.response.clone_output is not None:
-                self.handle_clone_output(ax, self.response)
+                self.handle_clone_output(ax, self.response, self.response.model_name)
             else:
                 # call the punsh function
                 self.punish(ax)
@@ -232,7 +232,7 @@ class VoiceCloningService(AIModelService):
         except Exception as e:
             print(f"An error occurred while processing voice clone responses: {e}")
 
-    def handle_clone_output(self, axon, response):
+    def handle_clone_output(self, axon, response, model_name):
         try:
             if response is not None and response.clone_output is not None:
                 output = response.clone_output
@@ -245,7 +245,10 @@ class VoiceCloningService(AIModelService):
                 audio_data_int = (audio_data * 2147483647).type(torch.IntTensor)
                 # Add an extra dimension to make it a 2D tensor
                 audio_data_int = audio_data_int.unsqueeze(0)
-                sampling_rate = 44000
+                if model_name is "elevenlabs/eleven":
+                    sampling_rate = 44000
+                elif model_name is "bark/voiceclone":
+                    sampling_rate = 24000
                 file = self.filename.split(".")[0]
                 cloned_file_path = os.path.join(self.target_path, file + '_cloned_'+ axon.hotkey[:6] +'_.wav' )
                 if file is None or file == "":

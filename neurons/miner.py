@@ -299,11 +299,13 @@ def main(config):
         try:
             if config.clone_model == "elevenlabs/eleven":
                 speech_file_path = ElevenlabsClone_call(input_text, 'input.wav',hf_voice_id)
+                synapse.model_name = config.clone_model
                 speech = convert_audio_to_tensor(speech_file_path)
             elif config.clone_model == "bark/voiceclone":
                 bt.logging.info(" __________________ Selected mode is bark/voiceclone __________________ ")
                 speech_file_path = BarkVoiceClone_call(input_text, 'input.wav',hf_voice_id)
                 bt.logging.info(f" __________________ the source file path is: {speech_file_path} __________________ ")
+                synapse.model_name = config.clone_model
                 speech = convert_audio_to_tensor(speech_file_path)
             if speech is not None:
                 bt.logging.success("Voice Clone has been generated!")
