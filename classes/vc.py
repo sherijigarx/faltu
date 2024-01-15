@@ -245,9 +245,9 @@ class VoiceCloningService(AIModelService):
                 audio_data_int = (audio_data * 2147483647).type(torch.IntTensor)
                 # Add an extra dimension to make it a 2D tensor
                 audio_data_int = audio_data_int.unsqueeze(0)
-                if response.model_name is "elevenlabs/eleven":
+                if response.model_name == "elevenlabs/eleven":
                     sampling_rate = 44000
-                elif response.model_name is "bark/voiceclone":
+                elif response.model_name == "bark/voiceclone":
                     sampling_rate = 24000
                 file = self.filename.split(".")[0]
                 cloned_file_path = os.path.join(self.target_path, file + '_cloned_'+ axon.hotkey[:6] +'_.wav' )
