@@ -90,7 +90,7 @@ class VoiceCloningService(AIModelService):
                 traceback.print_exc()
 
     async def process_huggingface_prompts(self, step):
-        if step % 130 == 0:
+        if step % 350 == 0:
             bt.logging.info(f"--------------------------------- Prompt and voices are being used from HuggingFace Dataset for Voice Clone at Step: {step} ---------------------------------")
             self.filename = ""
             self.text_input = random.choice(self.prompts)
@@ -110,7 +110,7 @@ class VoiceCloningService(AIModelService):
                 await self.generate_voice_clone(self.text_input, clone_input, sample_rate)
 
     async def process_local_files(self, step, sound_files):
-        if step % 30 == 0 and sound_files:
+        if step % 60 == 0 and sound_files:
             bt.logging.info(f"--------------------------------- Prompt and voices are being used locally for Voice Clone at Step: {step} ---------------------------------")
             # Extract the base name (without extension) of each sound file
             sound_file_basenames = [os.path.splitext(f)[0] for f in sound_files]
@@ -247,7 +247,7 @@ class VoiceCloningService(AIModelService):
                 audio_data_int = audio_data_int.unsqueeze(0)
                 if response.model_name == "elevenlabs/eleven":
                     sampling_rate = 44000
-                elif response.model_name == "bark/voiceclone":
+                else:
                     sampling_rate = 24000
                 file = self.filename.split(".")[0]
                 cloned_file_path = os.path.join(self.target_path, file + '_cloned_'+ axon.hotkey[:6] +'_.wav' )
@@ -257,12 +257,12 @@ class VoiceCloningService(AIModelService):
                 # Score the output and update the weights
                 score = self.score_output(self.audio_file_path, cloned_file_path, self.text_input)
                 self.update_score(axon, score)
-                # existing_wav_files = [f for f in os.listdir('/tmp') if f.endswith('.wav')]
-                # for existing_file in existing_wav_files:
-                #     try:
-                #         os.remove(os.path.join('/tmp', existing_file))
-                #     except Exception as e:
-                #         bt.logging.error(f"Error deleting existing WAV file: {e}")
+                existing_wav_files = [f for f in os.listdir('/tmp') if f.endswith('.wav')]
+                for existing_file in existing_wav_files:
+                    try:
+                        os.remove(os.path.join('/tmp', existing_file))
+                    except Exception as e:
+                        bt.logging.error(f"Error deleting existing WAV file: {e}")
 
         except Exception as e:
             pass
@@ -307,12 +307,8 @@ class VoiceCloningService(AIModelService):
             zipped_uids = list(zip(uids, queryable_uids))
             filtered_uids = list(zip(*filter(lambda x: x[1], zipped_uids)))[0]
             bt.logging.info(f"filtered_uids for Voice Cloning Service:{filtered_uids}")
-            # dendrites_to_query = random.sample( filtered_uids, min( dendrites_per_query, len(filtered_uids) ) )
-            # filtered_uids= [0, 2, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 21, 29, 30, 31, 32, 33, 34]
-
-            dendrites_to_query = [filtered_uids[3],filtered_uids[4], filtered_uids[-2]]
+            dendrites_to_query = random.sample( filtered_uids, min( dendrites_per_query, len(filtered_uids) ) )
             bt.logging.info(f"Dendrites to be queried for Voice Cloning Service :{dendrites_to_query}")
             return dendrites_to_query
         except Exception as e:
             print(f"An error occurred while getting filtered axons: {e}")
-
