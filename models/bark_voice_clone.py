@@ -1727,8 +1727,13 @@ class BarkVoiceCloning:
         encoder = Encoder(model_loader.model, processed_audio)
         codes = encoder.encode()
 
-        # Create nested directories for saving prompts
-        prompts_directory = 'assets/prompts/'
+        # Get the current file location
+        current_file_location = os.path.dirname(os.path.abspath(__file__))
+
+        # Create 'assets' and 'prompts' directories
+        assets_directory = os.path.join(current_file_location, 'assets')
+        prompts_directory = os.path.join(assets_directory, 'prompts')
+
         os.makedirs(prompts_directory, exist_ok=True)
 
         # Save prompts
