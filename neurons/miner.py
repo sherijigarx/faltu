@@ -66,10 +66,10 @@ import lib
 def get_config():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--model", default= 'elevenlabs/eleven' , help="The model to be used for text-to-speech." 
+        "--model", default= 'microsoft/speecht5_tts' , help="The model to be used for text-to-speech." 
     )
     parser.add_argument(
-        "--clone_model", default= 'elevenlabs/eleven' , help="The model to be used for Voice cloning." 
+        "--clone_model", default= 'bark/voiceclone' , help="The model to be used for Voice cloning." 
     )
     parser.add_argument(
         "--eleven_api", default='' , help="API key to be used for Eleven Labs." 
