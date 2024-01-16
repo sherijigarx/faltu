@@ -94,20 +94,20 @@ class VoiceCloningService(AIModelService):
             bt.logging.info(f"--------------------------------- Prompt and voices are being used from HuggingFace Dataset for Voice Clone at Step: {step} ---------------------------------")
             self.filename = ""
             self.text_input = random.choice(self.prompts)
-            if len(self.text_input) > 256:
+            while len(self.text_input) > 256:
                 bt.logging.error(f"The length of current Prompt is greater than 256. Skipping current prompt.")
-                vc_voice = random.choice(self.audio_files)
-            else:
-                vc_voice = random.choice(self.audio_files)
-                audio_array = vc_voice['array']
-                sampling_rate = vc_voice['sampling_rate']
-                self.hf_voice_id = vc_voice['path'].split("/")[-1][:10]
-                sf.write('input_file.wav', audio_array, sampling_rate)
-                self.audio_file_path = os.path.join(audio_subnet_path, "input_file.wav")
-                waveform, _ = torchaudio.load(self.audio_file_path)
-                clone_input = waveform.tolist()
-                sample_rate = sampling_rate
-                await self.generate_voice_clone(self.text_input, clone_input, sample_rate)
+                self.text_input = random.choice(self.prompts)
+
+            vc_voice = random.choice(self.audio_files)
+            audio_array = vc_voice['array']
+            sampling_rate = vc_voice['sampling_rate']
+            self.hf_voice_id = vc_voice['path'].split("/")[-1][:10]
+            sf.write('input_file.wav', audio_array, sampling_rate)
+            self.audio_file_path = os.path.join(audio_subnet_path, "input_file.wav")
+            waveform, _ = torchaudio.load(self.audio_file_path)
+            clone_input = waveform.tolist()
+            sample_rate = sampling_rate
+            await self.generate_voice_clone(self.text_input, clone_input, sample_rate)
 
     async def process_local_files(self, step, sound_files):
         if step % 60 == 0 and sound_files:
