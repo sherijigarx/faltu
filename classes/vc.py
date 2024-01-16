@@ -224,9 +224,14 @@ class VoiceCloningService(AIModelService):
     def process_voice_clone_responses(self, ax):
         try:
             if self.response is not None and isinstance(self.response, lib.protocol.VoiceClone) and self.response.clone_output is not None:
+                bt.logging.error(f"The Data in response is ----------- {self.response.status_code}")
+                bt.logging.error(f"The Data in response is ----------- {self.response.status_message}")
                 self.handle_clone_output(ax, self.response)
             else:
                 # call the punsh function
+                bt.logging.error(f"The Data in response is ----------- {self.response.status_code}")
+                bt.logging.error(f"The Data in response is ----------- {self.response.status_message}")
+                # bt.logging.error(f"and status message in resonse object -----------  {self.response.status_message}")
                 self.punish(ax, service="Voice Cloning")
             return ax.hotkey
         except Exception as e:
@@ -307,7 +312,8 @@ class VoiceCloningService(AIModelService):
             zipped_uids = list(zip(uids, queryable_uids))
             filtered_uids = list(zip(*filter(lambda x: x[1], zipped_uids)))[0]
             bt.logging.info(f"filtered_uids for Voice Cloning Service:{filtered_uids}")
-            dendrites_to_query = random.sample( filtered_uids, min( dendrites_per_query, len(filtered_uids) ) )
+            # dendrites_to_query = random.sample( filtered_uids, min( dendrites_per_query, len(filtered_uids) ) )
+            dendrites_to_query = filtered_uids
             bt.logging.info(f"Dendrites to be queried for Voice Cloning Service :{dendrites_to_query}")
             return dendrites_to_query
         except Exception as e:
