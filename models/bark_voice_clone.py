@@ -1721,7 +1721,6 @@ class BarkVoiceCloning:
         # Save prompts
         output_path = os.path.join(prompts_directory, voice_name + '.npz')
         np.savez(output_path, fine_prompt=codes.cpu(), coarse_prompt=codes[:2, :].cpu(), semantic_prompt=semantic_tokens.cpu())
-        print(f":::::::::::::::::::::::::::::::::::::: Saved value of voice name is to:::::::::::::::::::::::::::::::::::::: {voice_name}")
         audio_generator = AudioGenerator(prompt, voice_name)
         audio_array = audio_generator.generate_audio()
 
