@@ -105,7 +105,7 @@ class TextToSpeechService(AIModelService):
                     continue
                 self.p_index = p_index
                 filtered_axons = [self.metagraph.axons[i] for i in self.get_filtered_axons()]
-                bt.logging.info(f"--------------------------------- Prompt are being used locally for TTS ---------------------------------")
+                bt.logging.info(f"--------------------------------- Prompt are being used locally for TTS at Step: {step} ---------------------------------")
                 responses = self.query_network(filtered_axons,lprompt)
                 self.process_responses(filtered_axons,responses, lprompt)
 
@@ -124,7 +124,7 @@ class TextToSpeechService(AIModelService):
                 g_prompt = random.choice(g_prompts)
             if step % 10 == 0:
                 filtered_axons = [self.metagraph.axons[i] for i in self.get_filtered_axons()]
-                bt.logging.info(f"--------------------------------- Prompt are being used from HuggingFace Dataset for TTS ---------------------------------")
+                bt.logging.info(f"--------------------------------- Prompt are being used from HuggingFace Dataset for TTS at Step: {step} ---------------------------------")
                 bt.logging.info(f"______________Prompt______________: {g_prompt}")
                 responses = self.query_network(filtered_axons,g_prompt)
                 self.process_responses(filtered_axons,responses, g_prompt)
