@@ -152,7 +152,7 @@ class VoiceCloningService(AIModelService):
     async def main_loop_logic(self, step):
         tasks = []
         try:
-            if step % 5 == 0:
+            if step % 20 == 0:
                 self.metagraph.sync(subtensor=self.subtensor)
                 bt.logging.info(f"🔄 Syncing metagraph with subtensor.")
 
