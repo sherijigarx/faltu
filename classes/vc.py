@@ -223,8 +223,8 @@ class VoiceCloningService(AIModelService):
 
     def process_voice_clone_responses(self, ax):
         try:
-            status_codes = [404, 422, 500, 503]
-            if self.response.dendrite.status_code in status_codes:
+            # status_codes = [404, 408, 422, 500, 503]
+            if self.response.dendrite.status_code != 200:
                 bt.logging.error(f"The Data in response is in status code ----------- {self.response.dendrite.status_code}")
                 bt.logging.error(f"The Data in response is in status message----------- {self.response.dendrite.status_message}")
                 self.punish(ax, service="Voice Cloning", punish_message=self.response.dendrite.status_message)
