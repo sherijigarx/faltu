@@ -223,15 +223,14 @@ class VoiceCloningService(AIModelService):
 
     def process_voice_clone_responses(self, ax):
         try:
-            if self.response is not None and isinstance(self.response, lib.protocol.VoiceClone) and self.response.clone_output is not None:
+            status_codes = [404, 422, 500, 503]
+            if self.response.dendrite.status_code in status_codes:
                 bt.logging.error(f"The Data in response is in status code ----------- {self.response.dendrite.status_code}")
                 bt.logging.error(f"The Data in response is in status message----------- {self.response.dendrite.status_message}")
+                self.punish(ax, service="Voice Cloning")
+            elif self.response is not None and isinstance(self.response, lib.protocol.VoiceClone) and self.response.clone_output is not None and self.response.dendrite.status_code == 200:
                 self.handle_clone_output(ax, self.response)
             else:
-                # call the punsh function
-                bt.logging.error(f"The Data in response is ----------- {self.response.dendrite.status_code}")
-                bt.logging.error(f"The Data in response is ----------- {self.response.dendrite.status_message}")
-                # bt.logging.error(f"and status message in resonse object -----------  {self.response.status_message}")
                 self.punish(ax, service="Voice Cloning")
             return ax.hotkey
         except Exception as e:
