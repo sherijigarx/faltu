@@ -173,7 +173,7 @@ class TextToSpeechService(AIModelService):
             if response is not None and isinstance(response, lib.protocol.TextToSpeech) and response.speech_output is not None:
                 self.handle_speech_output(axon, speech_output, prompt, response.model_name)
             else:
-                self.punish(axon)
+                self.punish(axon, service="Text-To-Speech")
         except Exception as e:
             bt.logging.error(f'An error occurred while handling speech output: {e}')
 

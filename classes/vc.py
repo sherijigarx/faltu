@@ -227,7 +227,7 @@ class VoiceCloningService(AIModelService):
                 self.handle_clone_output(ax, self.response)
             else:
                 # call the punsh function
-                self.punish(ax)
+                self.punish(ax, service="Voice Cloning")
             return ax.hotkey
         except Exception as e:
             print(f"An error occurred while processing voice clone responses: {e}")
