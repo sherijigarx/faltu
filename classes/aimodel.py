@@ -125,7 +125,7 @@ class AIModelService:
             alpha = self.config.alpha
             self.scores[uid_index] = alpha * self.scores[uid_index] + (1 - alpha) * 0.0
             # Log the updated score
-            bt.logging.info(f"Updated score for {service} Punished Hotkey {axon.hotkey} Due to {punish_message} : {self.scores[uid_index]}")
+            bt.logging.info(f"Score after punishment for Hotkey {axon.hotkey} using {service} is Punished  Due to {punish_message} : {self.scores[uid_index]}")
         except Exception as e:
             print(f"An error occurred while punishing the axon: {e}")
 
