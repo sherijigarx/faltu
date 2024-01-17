@@ -28,6 +28,8 @@ share/python-wheels/
 *.pth
 *.wav
 *.mp3
+*.csv
+*.txt
 *.npz
 MANIFEST
 
