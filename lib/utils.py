@@ -79,6 +79,20 @@ def update_repo():
         origin = repo.remotes.origin
 
         # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
+        # Check for uncommitted changes (excluding untracked files)
         if repo.is_dirty(untracked_files=True):
             bt.logging.info("Uncommitted changes detected. Attempting to commit them.")
 
