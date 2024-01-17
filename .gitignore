@@ -31,6 +31,8 @@ share/python-wheels/
 *.csv
 *.txt
 *.npz
+!requirements.txt
+!models/sample3.wav
 MANIFEST
 
 # PyInstaller
