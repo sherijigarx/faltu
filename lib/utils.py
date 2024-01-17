@@ -79,25 +79,11 @@ def update_repo():
         origin = repo.remotes.origin
 
         # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
-        # Check for uncommitted changes (excluding untracked files)
         if repo.is_dirty(untracked_files=True):
             bt.logging.info("Uncommitted changes detected. Attempting to commit them.")
 
             # Stage all changed files (tracked and untracked)
-            repo.git.add(A=True)
+            repo.git.add(all=True)
 
             # Commit the changes
             try:
@@ -106,7 +92,6 @@ def update_repo():
             except git.exc.GitCommandError as commit_error:
                 bt.logging.error(f"Error while committing changes: {commit_error}")
                 return False
-
         try:
             bt.logging.info("Trying to pull remote repository")
             origin.pull()
