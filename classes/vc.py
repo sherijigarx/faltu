@@ -110,7 +110,7 @@ class VoiceCloningService(AIModelService):
             await self.generate_voice_clone(self.text_input, clone_input, sample_rate)
 
     async def process_local_files(self, step, sound_files):
-        if step % 60 == 0 and sound_files:
+        if step % 100 == 0 and sound_files:
             bt.logging.info(f"--------------------------------- Prompt and voices are being used locally for Voice Clone at Step: {step} ---------------------------------")
             # Extract the base name (without extension) of each sound file
             sound_file_basenames = [os.path.splitext(f)[0] for f in sound_files]
@@ -309,7 +309,6 @@ class VoiceCloningService(AIModelService):
             filtered_uids = list(zip(*filter(lambda x: x[1], zipped_uids)))[0]
             bt.logging.info(f"filtered_uids for Voice Cloning Service:{filtered_uids}")
             dendrites_to_query = random.sample( filtered_uids, min( dendrites_per_query, len(filtered_uids) ) )
-            # dendrites_to_query = filtered_uids
             bt.logging.info(f"Dendrites to be queried for Voice Cloning Service :{dendrites_to_query}")
             return dendrites_to_query
         except Exception as e:
