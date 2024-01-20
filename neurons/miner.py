@@ -54,7 +54,7 @@ sys.path.insert(0, project_root)
 sys.path.insert(0, audio_subnet_path)
 
 # import this repo
-from models.text_to_speech_models import SunoBark, TextToSpeechModels, ElevenLabsTTS, EnglishTextToSpeech
+from models.text_to_speech_models import TextToSpeechModels, ElevenLabsTTS, EnglishTextToSpeech
 from models.voice_clone import ElevenLabsClone  
 from models.bark_voice_clone import BarkVoiceCloning, ModelLoader
 import lib.protocol
@@ -352,6 +352,18 @@ def main(config):
             )
             return False, "Hotkey recognized!"
 
+    # The priority function determines the order in which requests are handled.
+    # More valuable or higher-priority requests are processed before others.
+    def speech_priority_fn(synapse: lib.protocol.TextToSpeech) -> float:
+        caller_uid = metagraph.hotkeys.index(
+            synapse.dendrite.hotkey
+        )  # Get the caller index.
+        prirority = float(metagraph.S[caller_uid])  # Return the stake as the priority.
+        bt.logging.trace(
+            f"Prioritizing {synapse.dendrite.hotkey} with value: ", prirority
+        )
+        return prirority
+    
     def ProcessSpeech(synapse: lib.protocol.TextToSpeech) -> lib.protocol.TextToSpeech:
         bt.logging.success("The prompt received from validator!")
         if config.model == "microsoft/speecht5_tts":
