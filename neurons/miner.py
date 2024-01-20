@@ -61,7 +61,7 @@ import lib.protocol
 import lib.utils
 import lib
 
-
+BlackList = ['5EqhXVkq74vdV1a9ueNU4KQSWmEkacREXMFZQVyua8RYgL7f']
 
 def get_config():
     parser = argparse.ArgumentParser()
@@ -183,10 +183,22 @@ def main(config):
                 f"Blacklisting unrecognized hotkey {synapse.dendrite.hotkey}"
             )
             return True, "Unrecognized hotkey"
-        bt.logging.trace(
-            f"Not Blacklisting recognized hotkey {synapse.dendrite.hotkey}"
-        )
-        return False, "Hotkey recognized!"
+        elif synapse.dendrite.hotkey in metagraph.hotkeys and metagraph.S[metagraph.hotkeys.index(synapse.dendrite.hotkey)] < 20000:
+            # Ignore requests from entities with low stake.
+            bt.logging.trace(
+                f"Blacklisting hotkey {synapse.dendrite.hotkey} with low stake"
+            )
+            return True, "Low stake"
+        elif synapse.dendrite.hotkey in BlackList:
+            bt.logging.trace(
+                f"Blacklisting Key recognized as blacklisted hotkey {synapse.dendrite.hotkey}"
+            )
+            return True, "Blacklisted hotkey"
+        else:
+            bt.logging.trace(
+                f"Not Blacklisting recognized hotkey {synapse.dendrite.hotkey}"
+            )
+            return False, "Hotkey recognized!"
 
     # The priority function determines the order in which requests are handled.
     # More valuable or higher-priority requests are processed before others.
@@ -323,22 +335,22 @@ def main(config):
                 f"Blacklisting unrecognized hotkey {synapse.dendrite.hotkey}"
             )
             return True, "Unrecognized hotkey"
-        bt.logging.trace(
-            f"Not Blacklisting recognized hotkey {synapse.dendrite.hotkey}"
-        )
-        return False, "Hotkey recognized!"
-
-    # The priority function determines the order in which requests are handled.
-    # More valuable or higher-priority requests are processed before others.
-    def speech_priority_fn(synapse: lib.protocol.TextToSpeech) -> float:
-        caller_uid = metagraph.hotkeys.index(
-            synapse.dendrite.hotkey
-        )  # Get the caller index.
-        prirority = float(metagraph.S[caller_uid])  # Return the stake as the priority.
-        bt.logging.trace(
-            f"Prioritizing {synapse.dendrite.hotkey} with value: ", prirority
-        )
-        return prirority
+        elif synapse.dendrite.hotkey in metagraph.hotkeys and metagraph.S[metagraph.hotkeys.index(synapse.dendrite.hotkey)] < 20000:
+            # Ignore requests from entities with low stake.
+            bt.logging.trace(
+                f"Blacklisting hotkey {synapse.dendrite.hotkey} with low stake"
+            )
+            return True, "Low stake"
+        elif synapse.dendrite.hotkey in BlackList:
+            bt.logging.trace(
+                f"Blacklisting Key recognized as blacklisted hotkey {synapse.dendrite.hotkey}"
+            )
+            return True, "Blacklisted hotkey"
+        else:
+            bt.logging.trace(
+                f"Not Blacklisting recognized hotkey {synapse.dendrite.hotkey}"
+            )
+            return False, "Hotkey recognized!"
 
     def ProcessSpeech(synapse: lib.protocol.TextToSpeech) -> lib.protocol.TextToSpeech:
         bt.logging.success("The prompt received from validator!")

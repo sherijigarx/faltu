@@ -68,7 +68,7 @@ def check_version_updated():
     
     
     if version2number(remote_version) != version2number(local_version):
-        bt.logging.info(f"👩‍👦Update to the latest version is required")
+        bt.logging.info(f"Update to the latest version is required")
         return True
     else:
         return False
@@ -79,9 +79,8 @@ def update_repo():
         
         origin = repo.remotes.origin
 
-        # origin.fetch()
         if repo.is_dirty(untracked_files=False):
-            bt.logging.info("Update failed: Uncommited changes detected. Please commit changes")
+            bt.logging.info("Update Iusse: Uncommited changes detected. Please commit changes")
         try:
             bt.logging.info("Try pulling remote repository")
             origin.pull()
@@ -120,7 +119,7 @@ def version2number(version_string):
     return 100 * version_digits[0] + 10 * version_digits[1] + version_digits[2]
 
 def restart_app():
-    bt.logging.info("👩‍🦱app restarted due to the update")
+    bt.logging.info("App restarted due to the update")
     
     python = sys.executable
     os.execl(python, python, *sys.argv)
@@ -136,7 +135,7 @@ def try_update_packages():
         
         python_executable = sys.executable
         subprocess.check_call([python_executable], "-m", "pip", "install", "-r", requirements_path)
-        bt.logging.info("📦Updating packages finished.")
+        bt.logging.info("Updating packages finished.")
         
     except Exception as e:
         bt.logging.info(f"Updating packages failed {e}")
@@ -144,7 +143,7 @@ def try_update_packages():
 def try_update():
     try:
         if check_version_updated() == True:
-            bt.logging.info("found the latest version in the repo. try ♻️update...")
+            bt.logging.info("found the latest version in the repo. try update...")
             if update_repo() == True:
                 try_update_packages()
                 restart_app()
