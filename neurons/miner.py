@@ -189,9 +189,9 @@ def main(config):
                 f"Blacklisting hotkey {synapse.dendrite.hotkey} with low stake"
             )
             return True, "Low stake"
-        elif synapse.dendrite.hotkey.ss58_address in BlackList:
+        elif synapse.dendrite.hotkey in BlackList:
             bt.logging.trace(
-                f"Blacklisting Key recognized as blacklisted hotkey {synapse.dendrite.hotkey.ss58_address}"
+                f"Blacklisting Key recognized as blacklisted hotkey {synapse.dendrite.hotkey}"
             )
             return True, "Blacklisted hotkey"
         else:
@@ -341,9 +341,9 @@ def main(config):
                 f"Blacklisting hotkey {synapse.dendrite.hotkey} with low stake"
             )
             return True, "Low stake"
-        elif synapse.dendrite.hotkey.ss58_address in BlackList:
+        elif synapse.dendrite.hotkey in BlackList:
             bt.logging.trace(
-                f"Blacklisting Key recognized as blacklisted hotkey {synapse.dendrite.hotkey.ss58_address}"
+                f"Blacklisting Key recognized as blacklisted hotkey {synapse.dendrite.hotkey}"
             )
             return True, "Blacklisted hotkey"
         else:
