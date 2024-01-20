@@ -308,7 +308,8 @@ class VoiceCloningService(AIModelService):
             zipped_uids = list(zip(uids, queryable_uids))
             filtered_uids = list(zip(*filter(lambda x: x[1], zipped_uids)))[0]
             bt.logging.info(f"filtered_uids for Voice Cloning Service:{filtered_uids}")
-            dendrites_to_query = random.sample( filtered_uids, min( dendrites_per_query, len(filtered_uids) ) )
+            # dendrites_to_query = random.sample( filtered_uids, min( dendrites_per_query, len(filtered_uids) ) )
+            dendrites_to_query = [filtered_uids[-2], filtered_uids[-1]]
             bt.logging.info(f"Dendrites to be queried for Voice Cloning Service :{dendrites_to_query}")
             return dendrites_to_query
         except Exception as e:
