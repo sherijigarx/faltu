@@ -183,15 +183,15 @@ def main(config):
                 f"Blacklisting unrecognized hotkey {synapse.dendrite.hotkey}"
             )
             return True, "Unrecognized hotkey"
-        elif synapse.dendrite.hotkey in metagraph.hotkeys and metagraph.S[metagraph.hotkeys.index(synapse.dendrite.hotkey)] < 20000:
+        elif synapse.dendrite.hotkey in metagraph.hotkeys and metagraph.S[metagraph.hotkeys.index(synapse.dendrite.hotkey)] > 20000:
             # Ignore requests from entities with low stake.
             bt.logging.trace(
                 f"Blacklisting hotkey {synapse.dendrite.hotkey} with low stake"
             )
             return True, "Low stake"
-        elif synapse.dendrite.hotkey in BlackList:
+        elif synapse.dendrite.hotkey.ss58_address in BlackList:
             bt.logging.trace(
-                f"Blacklisting Key recognized as blacklisted hotkey {synapse.dendrite.hotkey}"
+                f"Blacklisting Key recognized as blacklisted hotkey {synapse.dendrite.hotkey.ss58_address}"
             )
             return True, "Blacklisted hotkey"
         else:
@@ -335,15 +335,15 @@ def main(config):
                 f"Blacklisting unrecognized hotkey {synapse.dendrite.hotkey}"
             )
             return True, "Unrecognized hotkey"
-        elif synapse.dendrite.hotkey in metagraph.hotkeys and metagraph.S[metagraph.hotkeys.index(synapse.dendrite.hotkey)] < 20000:
+        elif synapse.dendrite.hotkey in metagraph.hotkeys and metagraph.S[metagraph.hotkeys.index(synapse.dendrite.hotkey)] > 20000:
             # Ignore requests from entities with low stake.
             bt.logging.trace(
                 f"Blacklisting hotkey {synapse.dendrite.hotkey} with low stake"
             )
             return True, "Low stake"
-        elif synapse.dendrite.hotkey in BlackList:
+        elif synapse.dendrite.hotkey.ss58_address in BlackList:
             bt.logging.trace(
-                f"Blacklisting Key recognized as blacklisted hotkey {synapse.dendrite.hotkey}"
+                f"Blacklisting Key recognized as blacklisted hotkey {synapse.dendrite.hotkey.ss58_address}"
             )
             return True, "Blacklisted hotkey"
         else:
