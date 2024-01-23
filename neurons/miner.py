@@ -485,7 +485,7 @@ def main(config):
         try:
             # TODO(developer): Define any additional operations to be performed by the miner.
             # Below: Periodically update our knowledge of the network graph.
-            if step % 100 == 0:
+            if step % 50 == 0:
                 metagraph = subtensor.metagraph(config.netuid)
                 log = (
                     f"Step:{step} | "
@@ -501,7 +501,7 @@ def main(config):
             step += 1
             time.sleep(1)
 
-            if step % 200 == 0 and config.auto_update == "yes":
+            if step % 100 == 0 and config.auto_update == "yes":
                 lib.utils.update_repo()
 
         # If someone intentionally stops the miner, it'll safely terminate operations.
