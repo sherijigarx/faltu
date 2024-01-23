@@ -485,7 +485,7 @@ def main(config):
         try:
             # TODO(developer): Define any additional operations to be performed by the miner.
             # Below: Periodically update our knowledge of the network graph.
-            if step % 500 == 0:
+            if step % 100 == 0:
                 metagraph = subtensor.metagraph(config.netuid)
                 log = (
                     f"Step:{step} | "
@@ -501,8 +501,8 @@ def main(config):
             step += 1
             time.sleep(1)
 
-            if step % 100 == 0 and config.auto_update == "yes":
-                lib.utils.try_update()
+            if step % 200 == 0 and config.auto_update == "yes":
+                lib.utils.update_repo()
 
         # If someone intentionally stops the miner, it'll safely terminate operations.
         except KeyboardInterrupt:
@@ -520,25 +520,3 @@ def main(config):
 if __name__ == "__main__":
     config = get_config()
     main(config)
-
-
-
-
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
-# This is the main function, which runs the miner.
